@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Modules Management{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Module Management</h4>
+    </div>
+    <div class="card-body">
+        {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div id="loading" style="display: none;">
+            <img src="{% static 'loading.gif' %}" alt="Loading...">
+            <p>Please wait...</p>
+        </div>
+
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Version</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for module in modules %}
+                <tr>
+                    <td>{{ module.name }}</td>
+                    <td>{{ module.version }}</td>
+                    <td>
+                        {% if module.installed %}
+                        <span class="badge bg-success">{{ module.installation_status }}</span>
+                        {% else %}
+                        <span class="badge bg-danger">{{ module.installation_status }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if module.installed %}
+                        <a href="{% url 'uninstall_module' module.id %}" class="btn btn-sm btn-danger" onclick="showLoading()">Uninstall</a>
+                        <a href="{% url 'upgrade_module' module.id %}" class="btn btn-sm btn-info">Upgrade</a>
+                        {% else %}
+                        <a href="{% url 'install_module' module.id %}" class="btn btn-sm btn-success" onclick="showLoading()">Install</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function showLoading() {
+        document.getElementById('loading').style.display = 'block';
+    }
+</script>
+{% endblock %}

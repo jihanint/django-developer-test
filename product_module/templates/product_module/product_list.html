@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Product Management{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Product List</h4>
+        {% if perms.product_module.add_product %}
+        <a href="{% url 'product_create' %}" class="btn btn-light">+ Add Product</a>
+        {% endif %}
+    </div>
+    <div class="card-body">
+        {% if messages %}
+        <div class="alert alert-success">
+            {% for message in messages %}
+            {{ message }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <table class="table table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Barcode</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.barcode }}</td>
+                    <td>${{ product.price }}</td>
+                    <td>{{ product.stock }}</td>
+                    <td>
+                        {% if perms.product_module.change_product %}
+                        <a href="{% url 'product_update' product.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                        {% endif %}
+                        {% if perms.product_module.delete_product %}
+                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ product.pk }}">
+                            Delete
+                        </button>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                <!-- Modal Konfirmasi Delete -->
+                <div class="modal fade" id="deleteModal{{ product.pk }}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Confirm Delete</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure to delete {{ product.name }}?
+                            </div>
+                            <div class="modal-footer">
+                                <form method="post" action="{% url 'product_delete' product.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                </form>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
