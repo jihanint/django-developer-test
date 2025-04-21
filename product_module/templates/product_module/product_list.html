@@ -48,7 +48,6 @@
                     </td>
                 </tr>
 
-                <!-- Modal Konfirmasi Delete -->
                 <div class="modal fade" id="deleteModal{{ product.pk }}" tabindex="-1">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -57,14 +56,14 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
-                                Are you sure to delete {{ product.name }}?
+                                Are you sure you want to delete <strong>{{ product.name }}</strong>?
                             </div>
                             <div class="modal-footer">
                                 <form method="post" action="{% url 'product_delete' product.pk %}">
                                     {% csrf_token %}
                                     <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 </form>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             </div>
                         </div>
                     </div>
