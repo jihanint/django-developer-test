@@ -43,27 +43,64 @@
         display: inline-block;
         border-radius: 4px;
     }
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
 </style>
 
 <div class="form-container">
     <h2>Product Form</h2>
+
+    {% if form.non_field_errors %}
+        <div class="alert-danger">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
         <div>
             <label for="id_name">Name</label>
             {{ form.name }}
+            {% if form.name.errors %}
+                <div class="alert-danger">
+                    {{ form.name.errors.0 }}
+                </div>
+            {% endif %}
         </div>
         <div>
             <label for="id_barcode">Barcode</label>
             {{ form.barcode }}
+            {% if form.barcode.errors %}
+                <div class="alert-danger">
+                    {{ form.barcode.errors.0 }}
+                </div>
+            {% endif %}
         </div>
         <div>
             <label for="id_price">Price</label>
             {{ form.price }}
+            {% if form.price.errors %}
+                <div class="alert-danger">
+                    {{ form.price.errors.0 }}
+                </div>
+            {% endif %}
         </div>
         <div>
             <label for="id_stock">Stock</label>
             {{ form.stock }}
+            {% if form.stock.errors %}
+                <div class="alert-danger">
+                    {{ form.stock.errors.0 }}
+                </div>
+            {% endif %}
         </div>
         <button type="submit" class="btn-primary">Save</button>
         <a href="{% url 'product_list' %}" class="btn-secondary">Cancel</a>
